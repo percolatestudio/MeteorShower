@@ -1,0 +1,17 @@
+<template name="results">
+  {{#each results}}
+    <h2>{{name}} - {{url}} - {{done}}</h2>
+    <table>
+      <tr>
+        <th>Latency</th>
+        <th>Load</th>
+      </tr>
+      {{#each readings}}
+        <tr>
+          <td>{{time}}</td>
+          <td>{{load}}</td>
+        </tr>
+      {{/each}}
+    </table>
+  {{/each}}
+</template>

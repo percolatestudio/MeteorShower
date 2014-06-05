@@ -1,0 +1,15 @@
+<template name="selector">
+  <form>
+    <label for="test">Test Name</label>
+    <select name="test">
+      {{#each tests}}
+        <option value="{{name}}">{{name}}</option>
+      {{/each}}
+    </select>
+      
+    <label for="url">URL</label>
+    <input type="url" name="url" value="http://localhost:3000">
+    
+    <button class="go">GO!</button>
+  </form>
+</template>
