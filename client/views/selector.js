@@ -13,6 +13,15 @@ Template.selector.events({
       url: template.$('[name=url]').val()
     }
     
-    Meteor.call('runTest', test.url, test.name);
+    var options = {};
+    var iterations = parseInt(template.$('[name=iterations]').val(),10);
+    if (iterations)
+      options.iterations = iterations
+    
+    var over = parseInt(template.$('[name=over]').val(), 10);
+    if (over)
+      options.over = over * 1000;
+    
+    Meteor.call('runTest', test.url, test.name, options);
   }
 });

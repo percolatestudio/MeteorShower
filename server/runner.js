@@ -5,12 +5,15 @@
 
 var Future = Npm.require('fibers/future');
 
+var DEFAULTS = {
+  iterations: 100,
+  over: 60 * 1000
+}
+
 Meteor.methods({
   runTest: function(url, name, options) {
-    var test = Tests[name];
-    
-    options = options || {};
-    
+    var test = _.extend(DEFAULTS, Tests[name], options);
+      
     var result = {
       url: url,
       name: name,
@@ -20,6 +23,7 @@ Meteor.methods({
     result._id = Results.insert(result);
     
     var start = new Date;
+    console.log('Running', name, test.iterations, 'times over', test.over/1000, 'seconds against', url);
     runTest(result, test);
     console.log('Ran test', name, 'against', url, 'in', (new Date - start) / 1000, 'seconds');
     
@@ -42,9 +46,8 @@ var runTest = function(result, test) {
     beforeServer.disconnect();
   }
   
-  // XXX: this is very rough first approximation of what we should do in the end
-  var iterations = test.iterations || 10;
-  var over = test.over || 60 * 1000; // 1 minute
+  var iterations = test.iterations;
+  var over = test.over;
   
   var done = 0, timeouts = [];
   _.times(iterations, function(i) {
