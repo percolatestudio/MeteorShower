@@ -19,7 +19,9 @@ Meteor.methods({
     };
     result._id = Results.insert(result);
     
+    var start = new Date;
     runTest(result, test);
+    console.log('Ran test', name, 'against', url, 'in', (new Date - start) / 1000, 'seconds');
     
     Results.update(result._id, {$set: {done: true}});
   }
@@ -41,26 +43,31 @@ var runTest = function(result, test) {
   }
   
   // XXX: this is very rough first approximation of what we should do in the end
-  var iterations = test.iterations || 100;
+  var iterations = test.iterations || 10;
+  var over = test.over || 60 * 1000; // 1 minute
   
-  // XXX: how to do this in parallel?
-  var done = 0;
-  _.times(iterations, function() {
-    var testServer;
+  var done = 0, timeouts = [];
+  _.times(iterations, function(i) {
+    var wait = i * over / iterations;
+    
+    // make it parallel
+    timeouts.push(Meteor.setTimeout(function() {
+      var testServer;
     
     
-    if (! test.noConnection)
-      var testServer = DDP.connect(url);
+      if (! test.noConnection)
+        var testServer = DDP.connect(url);
     
-    test.action.call(null, url);
+      test.action.call(null, url);
     
-    if (testServer)
-      testServer.disconnect();
+      if (testServer)
+        testServer.disconnect();
     
-    done += 1;
+      done += 1;
     
-    if (done === iterations)
-      future.return();
+      if (done === iterations)
+        future.return();
+    }, wait));
   });
   
   // // take readings
