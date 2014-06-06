@@ -1,7 +1,18 @@
 <template name="results">
   {{#each results}}
-    <h2>{{name}} - {{url}} - {{done}}</h2>
-    <table>
+    <h2>{{name}} - {{testName}} - {{done}}</h2>
+    <h3>{{url}} - {{iterations}} - {{overSeconds}}</h3>
+    
+    <dl>
+      <dt>Completed Runs</dt>
+      <dd>{{times.length}}</dd>
+      <dt>Average Execution Time</dt>
+      <dd>{{averageTime}} seconds</dd>
+      <dt>Max Execution Time</dt>
+      <dd>{{maxTime}} seconds</dd>
+    </dl>
+    
+    <!-- <table>
       <tr>
         <th>Latency</th>
         <th>Load</th>
@@ -12,6 +23,6 @@
           <td>{{load}}</td>
         </tr>
       {{/each}}
-    </table>
+    </table> -->
   {{/each}}
 </template>

@@ -11,22 +11,26 @@ var DEFAULTS = {
 }
 
 Meteor.methods({
-  runTest: function(id, url, name, options) {
-    var test = _.extend(DEFAULTS, Tests[name], options);
+  runTest: function(id, options) {
+    var test = _.extend(DEFAULTS, Tests[options.test], options);
       
     var result = {
       _id: id,
-      url: url,
-      name: name,
+      name: test.name,
+      url: test.url,
+      testName: options.test,
       when: new Date,
-      readings: []
+      iterations: test.iterations,
+      over: test.over,
+      readings: [],
+      times: []
     };
     result._id = Results.insert(result);
     
     var start = new Date;
-    console.log('Running', name, test.iterations, 'times over', test.over/1000, 'seconds against', url);
+    console.log('Running', test.name, test.iterations, 'times over', test.over/1000, 'seconds against', test.url);
     runTest(result, test);
-    console.log('Ran test', name, 'against', url, 'in', (new Date - start) / 1000, 'seconds');
+    console.log('Ran test', test.name, 'against', test.url, 'in', (new Date - start) / 1000, 'seconds');
     
     Results.update(result._id, {$set: {done: true}});
   }
@@ -56,9 +60,8 @@ var runTest = function(result, test) {
     
     // make it parallel
     timeouts.push(Meteor.setTimeout(function() {
-      var testServer;
-    
-    
+      var testServer, testStart = new Date;
+      
       if (! test.noConnection)
         var testServer = DDP.connect(url);
     
@@ -66,7 +69,9 @@ var runTest = function(result, test) {
     
       if (testServer)
         testServer.disconnect();
-    
+      
+      Results.update(result._id, {$push: {times: new Date - testStart}});
+      
       done += 1;
     
       if (done === iterations)

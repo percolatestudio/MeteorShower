@@ -8,12 +8,12 @@ Template.selector.events({
   'click .go': function(e, template) {
     e.preventDefault();
     
-    var test = {
-      name: template.$('[name=test]').val(),
+    var options = {
+      name: template.$('[name=name]').val(),
+      test: template.$('[name=test]').val(),
       url: template.$('[name=url]').val()
     }
     
-    var options = {};
     var iterations = parseInt(template.$('[name=iterations]').val(),10);
     if (iterations)
       options.iterations = iterations
@@ -22,6 +22,6 @@ Template.selector.events({
     if (over)
       options.over = over * 1000;
     
-    Meteor.call('runTest', Random.id(), test.url, test.name, options);
+    Meteor.call('runTest', Random.id(), options);
   }
 });
