@@ -22,6 +22,6 @@ Template.selector.events({
     if (over)
       options.over = over * 1000;
     
-    Meteor.call('runTest', test.url, test.name, options);
+    Meteor.call('runTest', Random.id(), test.url, test.name, options);
   }
 });

@@ -11,10 +11,11 @@ var DEFAULTS = {
 }
 
 Meteor.methods({
-  runTest: function(url, name, options) {
+  runTest: function(id, url, name, options) {
     var test = _.extend(DEFAULTS, Tests[name], options);
       
     var result = {
+      _id: id,
       url: url,
       name: name,
       when: new Date,
