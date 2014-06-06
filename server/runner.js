@@ -84,9 +84,9 @@ var runTest = function(result, test) {
   });
   
   // take readings
-  var interval = Meteor.setInterval(function() {
-    Results.update(result._id, {$push: {readings: getReading(url)}})
-  }, 1000)
+  // var interval = Meteor.setInterval(function() {
+  //   Results.update(result._id, {$push: {readings: getReading(url)}})
+  // }, 1000)
   
   // XXX: options.after
   return future.wait();
