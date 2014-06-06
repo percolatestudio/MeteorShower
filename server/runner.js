@@ -33,6 +33,10 @@ Meteor.methods({
     console.log('Ran test', test.name, 'against', test.url, 'in', (new Date - start) / 1000, 'seconds');
     
     Results.update(result._id, {$set: {done: true}});
+  },
+
+  reset: function() {
+    Results.remove({});
   }
 });
 

@@ -23,5 +23,10 @@ Template.selector.events({
       options.over = over * 1000;
     
     Meteor.call('runTest', Random.id(), options);
+  },
+  'click .reset': function(e, template) {
+    e.preventDefault();
+
+    Meteor.call('reset');
   }
 });
