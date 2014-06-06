@@ -11,12 +11,18 @@ Template.results.helpers({
     return Results.find({}, {sort: {when: -1}});
   },
   
-  averageTime: function() {
-    var total = _.reduce(this.times, function(n, i) { return n+i; }, 0);
-    return ((total / this.times.length) / 1000).toFixed(2);
+  loads: function() {
+    return _.map(this.readings, function(r) { return r.load.cpu; });
   },
   
-  maxTime: function() {
-    return (Math.max.apply(Math, this.times) / 1000).toFixed(2);
+  average: function(stat, divisor) {
+    divisor = divisor instanceof Spacebars.kw ? 1 : divisor;
+    var total = _.reduce(stat, function(n, i) { return n+i; }, 0);
+    return ((total / stat.length) / divisor).toFixed(2);
+  },
+  
+  max: function(stat, divisor) {
+    divisor = divisor instanceof Spacebars.kw ? 1 : divisor;
+    return (Math.max.apply(Math, stat) / divisor).toFixed(2);
   }
 })

@@ -79,10 +79,10 @@ var runTest = function(result, test) {
     }, wait));
   });
   
-  // // take readings
-  // var interval = Meteor.setInterval(function() {
-  //   Results.update(result._id, {$push: {readings: getReading(url)}})
-  // }, 1000)
+  // take readings
+  var interval = Meteor.setInterval(function() {
+    Results.update(result._id, {$push: {readings: getReading(url)}})
+  }, 1000)
   
   // XXX: options.after
   return future.wait();
@@ -95,9 +95,10 @@ var getReading = function(url) {
   
   // XXX: how to do these in parallel?
   
-  var startedAt = new Date;
-  HTTP.get(url)
-  var time = new Date - httpStartedAt;
+  // var startedAt = new Date;
+  // HTTP.get(url)
+  // var time = new Date - httpStartedAt;
+  var time = 0;
   
   var server = DDP.connect(url);
   // XXX: we should augment DDP to actually be sync

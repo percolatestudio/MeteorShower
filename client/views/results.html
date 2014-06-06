@@ -7,22 +7,18 @@
       <dt>Completed Runs</dt>
       <dd>{{times.length}}</dd>
       <dt>Average Execution Time</dt>
-      <dd>{{averageTime}} seconds</dd>
+      <dd>{{average times 1000}} seconds</dd>
       <dt>Max Execution Time</dt>
-      <dd>{{maxTime}} seconds</dd>
+      <dd>{{max times 1000}} seconds</dd>
     </dl>
-    
-    <!-- <table>
-      <tr>
-        <th>Latency</th>
-        <th>Load</th>
-      </tr>
-      {{#each readings}}
-        <tr>
-          <td>{{time}}</td>
-          <td>{{load}}</td>
-        </tr>
-      {{/each}}
-    </table> -->
+
+    <dl>
+      <dt>Readings taken</dt>
+      <dd>{{readings.length}}</dd>
+      <dt>Average CPU load</dt>
+      <dd>{{average loads}} %</dd>
+      <dt>Max CPU load</dt>
+      <dd>{{max loads}} %</dd>
+    </dl>
   {{/each}}
 </template>
