@@ -12,7 +12,13 @@ var DEFAULTS = {
 
 Meteor.methods({
   runTest: function(id, options) {
-    var test = _.extend(DEFAULTS, Tests[options.test], options);
+    this.unblock();
+    
+    var test = Tests[options.test];
+    if (_.isFunction(test))
+      test = {action: test};
+    
+    test = _.extend({}, DEFAULTS, test, options);
       
     var result = {
       _id: id,
@@ -41,10 +47,6 @@ Meteor.methods({
 });
 
 var runTest = function(result, test) {
-  if (_.isFunction(test))
-    test = {action: test};
-  
-  
   var future = new Future;
   var url = result.url;
   
@@ -69,7 +71,7 @@ var runTest = function(result, test) {
       if (! test.noConnection)
         var testServer = DDP.connect(url);
     
-      test.action.call(null, url);
+      test.action.call(testServer, url);
     
       if (testServer)
         testServer.disconnect();

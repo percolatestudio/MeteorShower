@@ -22,7 +22,9 @@ Template.selector.events({
     if (over)
       options.over = over * 1000;
     
-    Meteor.call('runTest', Random.id(), options);
+    var result = {_id: Random.id()};
+    Meteor.call('runTest', result._id, options);
+    Router.go('resultsShow', result);
   },
   'click .reset': function(e, template) {
     e.preventDefault();

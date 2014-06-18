@@ -1,12 +1,19 @@
-Meteor.publish('tests', function() {
-  var self = this;
-  
-  _.each(Tests, function(val, key) {
-    self.added('tests', Random.id(), {name: key});
+var publishArray = function(sub, name, array) {
+  _.each(array, function(val, key) {
+    sub.added(name, Random.id(), {name: key});
   })
   
-  self.ready();
+  sub.ready();
+}
+
+Meteor.publish('tests', function() {
+  publishArray(this, 'tests', Tests);
 });
+
+Meteor.publish('environments', function() {
+  publishArray(this, 'environments', Environments);
+});
+
 
 Meteor.publish('results', function() {
   return Results.find({}, {fields: {
