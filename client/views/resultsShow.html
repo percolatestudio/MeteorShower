@@ -1,0 +1,21 @@
+<template name="resultsShow">
+  {{> _resultHeader}}
+  
+  <dl>
+    <dt>Completed Runs</dt>
+    <dd>{{times.length}}</dd>
+    <dt>Average Execution Time</dt>
+    <dd>{{average times 1000}} seconds</dd>
+    <dt>Max Execution Time</dt>
+    <dd>{{max times 1000}} seconds</dd>
+  </dl>
+
+  <dl>
+    <dt>Readings taken</dt>
+    <dd>{{readings.length}}</dd>
+    <dt>Average CPU load</dt>
+    <dd>{{average loads}} %</dd>
+    <dt>Max CPU load</dt>
+    <dd>{{max loads}} %</dd>
+  </dl>
+</template>

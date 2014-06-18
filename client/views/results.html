@@ -1,24 +1,5 @@
 <template name="results">
   {{#each results}}
-    <h2>{{name}} - {{testName}} - {{done}}</h2>
-    <h3>{{url}} - {{iterations}} - {{overSeconds}}</h3>
-    
-    <dl>
-      <dt>Completed Runs</dt>
-      <dd>{{times.length}}</dd>
-      <dt>Average Execution Time</dt>
-      <dd>{{average times 1000}} seconds</dd>
-      <dt>Max Execution Time</dt>
-      <dd>{{max times 1000}} seconds</dd>
-    </dl>
-
-    <dl>
-      <dt>Readings taken</dt>
-      <dd>{{readings.length}}</dd>
-      <dt>Average CPU load</dt>
-      <dd>{{average loads}} %</dd>
-      <dt>Max CPU load</dt>
-      <dd>{{max loads}} %</dd>
-    </dl>
+    <a href="{{pathFor 'resultsShow'}}">{{> _resultHeader}}</a>
   {{/each}}
 </template>

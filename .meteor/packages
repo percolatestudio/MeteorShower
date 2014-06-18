@@ -6,3 +6,4 @@
 standard-app-packages
 insecure
 http
+iron-router

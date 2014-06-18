@@ -9,5 +9,13 @@ Meteor.publish('tests', function() {
 });
 
 Meteor.publish('results', function() {
-  return Results.find();
+  return Results.find({}, {fields: {
+    when: 1,
+    name: 1, testName: 1, done: 1,
+    url: 1, iterations: 1, over: 1
+  }});
+});
+
+Meteor.publish('result', function(id) {
+  return Results.find(id);
 });
