@@ -1,4 +1,8 @@
 Template.selector.helpers({
+  environments: function() {
+    return Environments.find();
+  },
+  
   tests: function() {
     return Tests.find();
   }
@@ -10,6 +14,7 @@ Template.selector.events({
     
     var options = {
       name: template.$('[name=name]').val(),
+      environment: template.$('[name=environment]').val(),
       test: template.$('[name=test]').val(),
       url: template.$('[name=url]').val()
     }

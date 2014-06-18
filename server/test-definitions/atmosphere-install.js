@@ -1,3 +1,3 @@
 Tests['atmosphere-install'] = function() {
-  this.call('takeAges');
+  console.log('doing nothing')
 }

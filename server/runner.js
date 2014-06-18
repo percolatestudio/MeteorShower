@@ -18,25 +18,30 @@ Meteor.methods({
     if (_.isFunction(test))
       test = {action: test};
     
-    test = _.extend({}, DEFAULTS, test, options);
-      
+    var environment;
+    if (options.environment)
+      environment = Environments[options.environment]
+    
+    options = _.extend({}, DEFAULTS, test, options);
+    
     var result = {
       _id: id,
-      name: test.name,
-      url: test.url,
+      name: options.name,
+      url: options.url,
+      environmentName: options.environment,
       testName: options.test,
       when: new Date,
-      iterations: test.iterations,
-      over: test.over,
+      iterations: options.iterations,
+      over: options.over,
       readings: [],
       times: []
     };
     result._id = Results.insert(result);
     
     var start = new Date;
-    console.log('Running', test.name, test.iterations, 'times over', test.over/1000, 'seconds against', test.url);
-    runTest(result, test);
-    console.log('Ran test', test.name, 'against', test.url, 'in', (new Date - start) / 1000, 'seconds');
+    console.log('Running', result.testName, result.iterations, 'times over', result.over/1000, 'seconds against', result.url, 'with', result.environment);
+    runTest(result, environment, test);
+    console.log('Ran test', result.testName, 'in', (new Date - start) / 1000, 'seconds');
     
     Results.update(result._id, {$set: {done: true}});
   },
@@ -46,19 +51,30 @@ Meteor.methods({
   }
 });
 
-var runTest = function(result, test) {
+var runTest = function(result, environment, test) {
   var future = new Future;
   var url = result.url;
   
-  if (test.before) {
-    var beforeServer = DDP.connect(url);
-    
-    test.before.call(beforeServer);
-    beforeServer.disconnect();
-  }
+  // XXX: do we still need this, given environment?
+  // if (test.before) {
+  //   var beforeServer = DDP.connect(url);
+  //   
+  //   test.before.call(beforeServer);
+  //   beforeServer.disconnect();
+  // }
   
-  var iterations = test.iterations;
-  var over = test.over;
+  
+  // XXX: options for environment
+  // XXX: subscribe in parallel?
+  var environments = [];
+  _.times(100, function(i) {
+    var envServer = DDP.connect(url);
+    environment.call(envServer);
+    environments.push(envServer);
+  });
+  
+  var iterations = result.iterations;
+  var over = result.over;
   
   var done = 0, timeouts = [];
   _.times(iterations, function(i) {
@@ -68,7 +84,7 @@ var runTest = function(result, test) {
     timeouts.push(Meteor.setTimeout(function() {
       var testServer, testStart = new Date;
       
-      if (! test.noConnection)
+      if (! result.noConnection)
         var testServer = DDP.connect(url);
     
       test.action.call(testServer, url);
@@ -90,8 +106,13 @@ var runTest = function(result, test) {
   //   Results.update(result._id, {$push: {readings: getReading(url)}})
   // }, 1000)
   
-  // XXX: options.after
-  return future.wait();
+  future.wait();
+  
+  // XXX: options.after?
+  
+  _.each(environments, function(envServer) {
+    envServer.disconnect();
+  });
 }
 
 // for now, we take two readings.
