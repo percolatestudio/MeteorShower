@@ -51,6 +51,30 @@ Meteor.methods({
   }
 });
 
+// XXX: should send a PR to core that does this
+var Future = Npm.require('fibers/future');
+var connect = function(url) {
+  var server = DDP.connect(url);
+
+  var oldSubscribe = server.subscribe;
+  server.subscribe = function() {
+    var future = new Future;
+
+    var newArgs = Array.prototype.slice.call(arguments)
+    newArgs.push({
+      onReady: _.bind(future.return, future),
+      onError: function(error) {
+        future.throw(new Error('Subscription Error:' + error.reason))
+      }
+    });
+    oldSubscribe.apply(server, newArgs);
+
+    return future.wait();
+  }
+  
+  return server;
+}
+
 var runTest = function(result, environment, test) {
   var future = new Future;
   var url = result.url;
@@ -68,7 +92,7 @@ var runTest = function(result, environment, test) {
   // XXX: subscribe in parallel?
   var environments = [];
   _.times(100, function(i) {
-    var envServer = DDP.connect(url);
+    var envServer = connect(url);
     environment.call(envServer);
     environments.push(envServer);
   });
@@ -85,7 +109,7 @@ var runTest = function(result, environment, test) {
       var testServer, testStart = new Date;
       
       if (! result.noConnection)
-        var testServer = DDP.connect(url);
+        var testServer = connect(url);
     
       test.action.call(testServer, url);
     
@@ -127,7 +151,7 @@ var getReading = function(url) {
   // var time = new Date - httpStartedAt;
   var time = 0;
   
-  var server = DDP.connect(url);
+  var server = connect(url);
   // XXX: we should augment DDP to actually be sync
   // var wrapped = Future.wrap(_.bind(server.call, server));
   // return wrapped(pipeline, options || {}).wait();
