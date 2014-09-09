@@ -1,0 +1,26 @@
+<template name="home">
+  <h1>Meteor Shower</h1>
+  <h2>Running tests against <code>{{host}}:{{port}}</code></h2>
+  
+  <a href="{{pathFor 'testsNew'}}">New Test</a>
+
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Publication</th>
+        <th>Method</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      {{#each tests}}
+        <tr>
+          <td><a href="{{pathFor 'testsShow'}}">{{name}}</a></td>
+          <td>{{publication}}</td>
+          <td>{{method}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>

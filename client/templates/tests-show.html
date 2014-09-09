@@ -1,0 +1,23 @@
+<template name="testsShow">
+  <h1>{{name}}</h1>
+  <h2>Calling '{{publication}}' against <code>{{host}}:{{port}}</code></h2>
+  {{#if method}}<h3>(Calling '{{method}}' first)</h3>{{/if}}
+  
+  <a href="{{pathFor 'resultsNew' testId=_id}}">Run Test</a>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      {{#each results}}
+        <tr>
+          <td><a href="{{pathFor 'resultsShow'}}">{{formatDate createdAt}}</a></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
