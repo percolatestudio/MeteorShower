@@ -32,9 +32,9 @@ startTestRun = function(result) {
   Log('Running' + test.name + '[' + test.publication + ']');
   
   if (test.method) {
-    Log('Preparing by calling ' + test.method);
+    Log('Preparing by calling ' + test.method + ' / start');
     var methodConnection = connect(URL);
-    methodConnection.call(test.method);
+    methodConnection.call(test.method, 'start');
     methodConnection.close();
   }
   Log('Prepared, running test.');
@@ -60,6 +60,13 @@ startTestRun = function(result) {
   
   Results.update(result._id, {$set: {complete: true}});
   Log('Test done, maxed out at ' + runs + ' connections');
-  
+
   _.each(connections, function(c) { c.close(); });
+
+  if (test.method) {
+    Log('Cleaning up by calling ' + test.method + ' / stop');
+    var methodConnection = connect(URL);
+    methodConnection.call(test.method, 'stop');
+    methodConnection.close();
+  }
 }
