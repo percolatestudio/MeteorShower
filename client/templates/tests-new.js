@@ -8,10 +8,14 @@ Template.testsNew.events({
       method: t.$('[name=method]').val()
     }
     
+    if (! test.name)
+      throw "You need a name, dummy";
     if (! test.publication)
       throw "You need a publication, dummy";
-    
-    test._id = Tests.insert(test);
-    Router.go('testsShow', test);
+      
+    Meteor.call('Tests.insert', test, function(error, r) {
+      if (error) throw error;
+      if (r.ok) Router.go('testsShow', {_id: r._id});
+    });
   }
 });

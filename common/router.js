@@ -23,9 +23,15 @@ Router.map(function() {
   this.route('resultsNew', {
     path: '/tests/:testId/results/new',
     action: function() {
-      var result = Results.init({testId: this.params.testId});
-      result._id = Results.insert(result);
-      Router.go('resultsShow', result);
+      var self = this;
+      Meteor.call('Results.insert', {testId: this.params.testId}, function(err, r) {
+        if (r.ok) {
+          Router.go('resultsShow', {
+            _id: r._id,
+            testId: self.params.testId
+          }, {replaceState: true});
+        }
+      });
     }
   });
 

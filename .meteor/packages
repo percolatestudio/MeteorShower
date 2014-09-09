@@ -7,6 +7,4 @@ meteor-platform
 iron:router
 dburles:collection-helpers
 mizzao:bootstrap-3
-insecure
 mrt:moment
-
