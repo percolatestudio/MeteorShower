@@ -66,7 +66,8 @@ startTestRun = function(result) {
     connections.push(connection);
     
     lastRunTime = new Date - start;
-    Results.update(result._id, {$push: {timings: lastRunTime}});
+    //Disable just in case
+    //Results.update(result._id, {$push: {timings: lastRunTime}});
     lastRunTimes.push(lastRunTime)
     
     // only keep 10
