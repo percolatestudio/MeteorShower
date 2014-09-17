@@ -1,6 +1,6 @@
 <template name="testsShow">
   <h1>{{name}}</h1>
-  <h2>Calling '{{publication}}' against <code>{{host}}:{{port}}</code></h2>
+  <h2>Calling '{{publication}}' publication against <code>{{host}}:{{port}}</code></h2>
   {{#if method}}<h3>(Calling '{{method}}' first)</h3>{{/if}}
   
   <a href="{{pathFor 'resultsNew' testId=_id}}">Run Test</a>

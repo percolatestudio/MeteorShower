@@ -39,12 +39,10 @@ startTestRun = function(result) {
   }
   Log('Prepared, running test.');
   
-  var lastRunTime, firstRunTime, runs = 0;
+  var lastRunTime, benchmarkRunTime, runs = 0;
   var connections = []
   do {
     runs += 1;
-    if (runs % LOG_EVERY === 0)
-      Log('Connected ' + runs + ' publications');
     
     var start = new Date;
     var connection = connect(URL);
@@ -53,10 +51,17 @@ startTestRun = function(result) {
     
     lastRunTime = new Date - start;
     Results.update(result._id, {$push: {timings: lastRunTime}});
+
+    if (runs % LOG_EVERY === 0)
+      Log('Connected ' + runs + ' publications, lastRunTime was ' + lastRunTime);
     
-    if (! firstRunTime)
-      firstRunTime = lastRunTime;
-  } while (lastRunTime < STOP_AT * firstRunTime);
+    if (! benchmarkRunTime || runs === 10) {
+      benchmarkRunTime = lastRunTime;
+      console.log('Set benchmarkRunTime to ' + benchmarkRunTime 
+        + ' stopping at ' + (benchmarkRunTime * STOP_AT));
+    }
+      
+  } while (lastRunTime < STOP_AT * benchmarkRunTime);
   
   Results.update(result._id, {$set: {complete: true}});
   Log('Test done, maxed out at ' + runs + ' connections');

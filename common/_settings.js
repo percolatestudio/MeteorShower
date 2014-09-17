@@ -7,6 +7,6 @@ if (typeof Meteor.settings.public === 'undefined')
 
 _.defaults(Meteor.settings.public, {
   environment: 'development',
-  testHost: 'localhost',
-  testPort: '3000'
+  testHost: 'george.percolatestudio.com',
+  testPort: '8080'
 });
